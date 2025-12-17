@@ -1,15 +1,38 @@
-// prisma/schema.prisma
-
-datasource db {
-  provider = "mysql"
-}
-
 generator client {
   provider = "prisma-client-js"
 }
 
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
+  id                   Int        @id @default(autoincrement())
+  name                 String
+  email                String     @unique
+  password             String
+  phone                String?
+  profileImage         String?
+  lastLogin            DateTime?
+  verified             Boolean    @default(false)
+  // --- Fields for RESET (TOTP) ---
+  passwordResetToken   String? // store token code
+  passwordResetExpires DateTime? // code live time
+  role                 UserRole   @default(USER)
+  status               UserStatus @default(ACTIVE)
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @updatedAt
+
+  @@map("users")
 }
