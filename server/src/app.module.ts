@@ -5,6 +5,7 @@ import { UserModule } from './module/user/user.module';
 import { AuthModule } from './module/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
+import {PrismaModule} from "./prisma/prisma.module";
 
 @Module({
   imports: [
@@ -12,8 +13,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
       isGlobal: true,
       envFilePath: '.env',
     }),
-
-    MailerModule.forRootAsync({
+      PrismaModule,
+      MailerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         transport: {
