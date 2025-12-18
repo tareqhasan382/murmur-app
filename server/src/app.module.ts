@@ -8,7 +8,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import {PrismaModule} from "./prisma/prisma.module";
 import { MurmursModule } from './module/murmurs/murmurs.module';
 import { FollowsModule } from './module/follows/follows.module';
-import { LikesModule } from './module/likes/likes.module';
+//import { LikesModule } from './module/likes/likes.module';
 
 @Module({
   imports: [
@@ -39,7 +39,7 @@ import { LikesModule } from './module/likes/likes.module';
     AuthModule,
     MurmursModule,
     FollowsModule,
-    LikesModule,
+    //LikesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
