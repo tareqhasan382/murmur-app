@@ -1,34 +1,100 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {Controller, Get, Post, Body, Patch, Param, Delete, Res, HttpStatus, UseGuards, Req} from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import express from 'express';
+import sendResponse from "../../utils/sendResponse.js";
+import {ApiBody, ApiOperation, ApiTags} from "@nestjs/swagger";
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import * as requestWithUserInterface from '../user/dto/request-with-user.interface';
+// import { GetMe } from './dto/request-with-user.interface';
+import type { GetMe } from './dto/request-with-user.interface';
 
+@ApiTags('User')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+    constructor(private readonly userService: UserService) {
+    }
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
-  }
+    // @Post()
+    // create(@Body() createUserDto: CreateUserDto) {
+    //   return this.userService.create(createUserDto);
+    // }
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
-  }
+    @Get()
+    @ApiOperation({summary: 'Get all users'})
+    async findAll(@Res() res: express.Response) {
+        const data = await this.userService.findAll();
+        return sendResponse(res, {
+            statusCode: HttpStatus.OK,
+            success: true,
+            message: 'User retrieved successfully',
+            data,
+        });
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
+    @UseGuards(JwtAuthGuard)
+    @Get('get-me')
+    @ApiOperation({summary: 'Get user by ID'})
+    async getMe(
+        @Req() req: GetMe,
+        @Res() res: express.Response,
+    ) {
+        const userId = req.user.id;
+        //console.log("userId-------------->", userId);
+        const data = await this.userService.findOne(+userId);
+        return sendResponse(res, {
+            statusCode: HttpStatus.OK,
+            success: true,
+            message: 'User retrieved successfully',
+            data,
+        });
+    }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
+    @Patch(':id')
+    @ApiOperation({summary: 'Update user'})
+    @ApiBody({type: UpdateUserDto})
+    async update(
+        @Param('id') id: string,
+        @Body() dto: UpdateUserDto,
+        @Res() res: express.Response,
+    ) {
+        const data = await this.userService.update(+id, dto);
+        return sendResponse(res, {
+            statusCode: HttpStatus.OK,
+            success: true,
+            message: 'User updated successfully',
+            data,
+        });
+    }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
-  }
+    @UseGuards(JwtAuthGuard)
+    @Delete('')
+    @ApiOperation({summary: 'Delete user'})
+    async remove(
+        @Req() req: GetMe,
+        @Res() res: express.Response,
+    ) {
+        const userId = req.user.id;
+        const data = await this.userService.remove(+userId);
+        return sendResponse(res, {
+            statusCode: HttpStatus.OK,
+            success: true,
+            message: 'User deleted successfully',
+            data,
+        });
+    }
+    @Get(':id')
+    @ApiOperation({summary: 'Get user by ID'})
+    async findOne(
+        @Param('id') id: string,
+        @Res() res: express.Response,
+    ) {
+        const data = await this.userService.findOne(+id);
+        return sendResponse(res, {
+            statusCode: HttpStatus.OK,
+            success: true,
+            message: 'User retrieved successfully',
+            data,
+        });
+    }
 }
