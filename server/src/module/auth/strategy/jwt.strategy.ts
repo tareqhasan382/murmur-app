@@ -21,6 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     // payload is what you signed inside AuthService (sub, email, role)
     async validate(payload: any) {
+        //console.log("payload------------->", payload);
         // Optionally validate that user still exists / is active
         const user = await this.prisma.user.findUnique({
             where: { id: payload.sub, },
@@ -32,7 +33,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         if (user.status !== 'ACTIVE') {
             throw new UnauthorizedException('User is inactive');
         }
-
+        //console.log("user---------->",user)
         return user; // attaches to request.user
     }
 }
