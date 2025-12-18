@@ -6,6 +6,9 @@ import { AuthModule } from './module/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import {PrismaModule} from "./prisma/prisma.module";
+import { MurmursModule } from './module/murmurs/murmurs.module';
+import { FollowsModule } from './module/follows/follows.module';
+import { LikesModule } from './module/likes/likes.module';
 
 @Module({
   imports: [
@@ -34,6 +37,9 @@ import {PrismaModule} from "./prisma/prisma.module";
 
     UserModule,
     AuthModule,
+    MurmursModule,
+    FollowsModule,
+    LikesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
