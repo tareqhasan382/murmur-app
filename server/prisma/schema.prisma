@@ -34,32 +34,64 @@ model User {
   createdAt            DateTime   @default(now())
   updatedAt            DateTime   @updatedAt
 
+ // --- Relations ---
+  murmurs   Murmur[]
+  likes     Likes[]
+  followers Follows[]  @relation("followers")
+  following Follows[]  @relation("following")
+
   @@map("users")
 }
 
 model Murmur {
   id Int @id @default(autoincrement())
+  content   String    @db.Text
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+ // --- Relations ---
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes     Likes[]
   @@map("murmurs")
 }
 
 model Follows {
-  id Int @id @default(autoincrement())
+  // id Int @id @default(autoincrement())
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+ // --- Relations ---
+  followerId  Int
+  followingId Int
+
+  follower    User @relation("following", fields: [followerId], references: [id],onDelete: Cascade)
+  following   User @relation("followers", fields: [followingId], references: [id],onDelete: Cascade)
+
+  @@index([followingId]) // who follows a user 
+  @@index([followerId])  // who a user follows
+  @@id([followerId, followingId])
 
   @@map("follows")
 }
 
 model Likes {
-  id Int @id @default(autoincrement())
+  //id Int @id @default(autoincrement())
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  userId   Int
+  murmurId Int
+
+  user     User   @relation(fields: [userId], references: [id],onDelete: Cascade)
+  murmur   Murmur @relation(fields: [murmurId], references: [id],onDelete: Cascade)
+  
+
+  @@id([userId, murmurId])
+  @@index([murmurId]) // count likes fast
 
   @@map("likes")
 }
