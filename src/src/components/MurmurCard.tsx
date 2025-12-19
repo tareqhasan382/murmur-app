@@ -22,7 +22,7 @@ export default function MurmurCard({ murmur }: Props) {
         }
     };
     return (
-        <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition p-4 space-y-3">
+        <div className="bg-white min-w-full rounded-2xl shadow-sm hover:shadow-md transition p-4 space-y-3">
             <div className="flex gap-3">
                 {murmur?.user?.profileImage ? (
                     <img
