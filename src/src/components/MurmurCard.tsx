@@ -1,25 +1,34 @@
 import {FaTrash, FaRegHeart, FaHeart} from 'react-icons/fa';
 import type {Murmur} from "../types";
-import {useLikeMurmurMutation} from "../redux/murmurs/murmursApi.ts";
+import {useLikeMurmurMutation,useDeleteMurmurMutation} from "../redux/murmurs/murmursApi.ts";
 import avatar from "../assets/avatar.jpg";
 import {timeAgo} from "../helper/timeCalculate.ts";
 import {Link} from "react-router-dom";
 interface Props {
     murmur: Murmur;
+    me:ProfileProps
 }
 
-
-export default function MurmurCard({ murmur }: Props) {
-    //const authString = localStorage.getItem("murmur");
-    //const auth = authString ? JSON.parse(authString) : null;
-     //console.log("auth:", auth?.user);
-    //const token = auth ? auth.accessToken : null;
+export default function MurmurCard({ murmur,me }: Props) {
     const [likeMurmur, { isLoading }] = useLikeMurmurMutation();
+    const [deleteMurmur, { isLoading:isDeleting  }] = useDeleteMurmurMutation();
     const handleLike = async () => {
         try {
             await likeMurmur(murmur.id).unwrap();
         } catch (error) {
             console.error("Failed to like murmur");
+        }
+    };
+    console.log("me------>",me)
+    console.log("murmur------>",murmur)
+    const handleDelete = async () => {
+        const confirm = window.confirm("Delete this murmur?");
+        if (!confirm) return;
+
+        try {
+            await deleteMurmur(murmur.id).unwrap();
+        } catch {
+            console.error("Failed to delete murmur");
         }
     };
     return (
@@ -53,9 +62,19 @@ export default function MurmurCard({ murmur }: Props) {
                             <p className="text-xs text-gray-500">{timeAgo(murmur?.createdAt)}</p>
                         </div>
                         <button
-                            className="text-gray-400 hover:text-red-500">
+                            onClick={handleDelete}
+                            disabled={isDeleting || me?.id !== murmur.user.id}
+                            className={`
+    transition
+    ${me?.id === murmur.user.id
+                                ? "text-gray-400 hover:text-red-500 cursor-pointer"
+                                : "text-gray-300 cursor-not-allowed"}
+    ${isDeleting ? "opacity-50" : ""}
+  `}
+                        >
                             <FaTrash size={14} />
                         </button>
+
                     </div>
 
 
@@ -67,7 +86,7 @@ export default function MurmurCard({ murmur }: Props) {
                     <div className="flex items-center gap-6 mt-3 text-gray-500">
                         <button
                             onClick={handleLike}
-                            disabled={isLoading}
+                            disabled={isLoading || murmur?.isLiked}
                             className={` ${murmur?.isLiked? 'text-red-500':''} flex items-center gap-2 hover:text-red-500 transition`}>
                             {/*<FaRegHeart  />*/}
                             {murmur?.isLiked? <FaHeart /> : <FaRegHeart />}

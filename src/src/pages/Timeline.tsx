@@ -49,7 +49,7 @@ export default function Timeline() {
 
                 <div className="space-y-4">
                     {murmursData?.data.map((murmur) => (
-                        <MurmurCard key={murmur.id} murmur={murmur} />
+                        <MurmurCard key={murmur.id} murmur={murmur} me={me?.data} />
                     ))}
                 </div>
             </main>
