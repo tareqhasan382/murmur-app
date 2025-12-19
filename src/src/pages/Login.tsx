@@ -1,7 +1,12 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { useLoginMutation } from "../redux/auth/authApi";
+import {Link, useNavigate} from "react-router-dom";
+import type {RootState} from "../redux/store.ts";
+import {useSelector} from "react-redux";
 
 export default function Login() {
+  const navigate = useNavigate();
+  const auth = useSelector((state: RootState) => state.auth);
   const [login, { isLoading, isError }] = useLoginMutation();
 
   const [form, setForm] = useState({
@@ -11,7 +16,11 @@ export default function Login() {
 
   const [success, setSuccess] = useState<string | null>(null);
   const [localError, setLocalError] = useState<string | null>(null);
-
+  useEffect(() => {
+    if (auth?.user) {
+      navigate("/", { replace: true });
+    }
+  }, [auth?.user, navigate]);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -26,7 +35,8 @@ export default function Login() {
         email: form.email,
         password: form.password,
       }).unwrap();
-
+//murmurs
+      //navigate("/");
       setSuccess("Account created successfully");
       setForm({email: "", password: "" });
     } catch (err) {
@@ -85,7 +95,12 @@ export default function Login() {
         </form>
 
         <p className="text-sm text-center text-gray-500">
-          New user? <span className="text-blue-600 cursor-pointer">Register</span>
+          New user? <Link
+            to="/register"
+            className="text-blue-600 hover:underline cursor-pointer"
+        >
+          Register
+        </Link>
         </p>
       </div>
     </div>
