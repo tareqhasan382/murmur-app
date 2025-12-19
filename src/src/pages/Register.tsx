@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSignupMutation } from "../redux/auth/authApi";
+import {Link} from "react-router-dom";
 
 export default function Register() {
   const [signup, { isLoading, isError }] = useSignupMutation();
@@ -115,7 +116,12 @@ export default function Register() {
         </form>
 
         <p className="text-sm text-center text-gray-500">
-          Already have an account? <span className="text-blue-600 cursor-pointer">Login</span>
+          Already have an account? <Link
+            to="/login"
+            className="text-blue-600 hover:underline cursor-pointer"
+        >
+          Login
+        </Link>
         </p>
       </div>
     </div>
