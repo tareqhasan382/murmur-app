@@ -1,18 +1,17 @@
-// export default function FollowButton() {
-//     return (
-//         <button className="px-4 py-1 border rounded-full hover:bg-blue-500 hover:text-white">
-//             Follow
-//         </button>
-//     );
-// }
+
 import { useFollowUserMutation, useUnfollowUserMutation, useGetMyFollowsQuery } from "../redux/follows/followsApi";
 import { useState, useEffect } from "react";
+import type {RootState} from "../redux/store.ts";
+import {useSelector} from "react-redux";
 
 interface Props {
     userId: number; // the profile user ID
 }
 
 export default function FollowButton({ userId }: Props) {
+    const auth = useSelector((state: RootState) => state.auth);
+
+
     const [isFollowing, setIsFollowing] = useState(false);
     const { data } = useGetMyFollowsQuery();
     const [followUser, { isLoading: isFollowingLoading }] = useFollowUserMutation();
@@ -43,7 +42,7 @@ export default function FollowButton({ userId }: Props) {
     return (
         <button
             onClick={handleClick}
-            disabled={isFollowingLoading || isUnfollowing}
+            disabled={isFollowingLoading || isUnfollowing || auth?.user?.sub ===userId}
             className={`px-4 py-1 rounded-full border transition ${
                 isFollowing
                     ? "bg-gray-200 text-gray-800 hover:bg-gray-300"
