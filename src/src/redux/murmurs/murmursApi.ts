@@ -1,23 +1,7 @@
 import { baseApi } from "../api/baseApi";
+import type {Murmur} from "../../types";
 
 /* ---------------- TYPES ---------------- */
-
-export interface User {
-  id: number;
-  name: string;
-  profileImage?: string;
-}
-
-export interface Murmur {
-  id: number;
-  content: string;
-  userId: number;
-  createdAt: string;
-  updatedAt: string;
-  likesCount: number;
-  user: User;
-}
-
 export interface ApiResponse<T> {
   statusCode: number;
   success: boolean;
@@ -34,17 +18,17 @@ export interface TimelineQuery {
 
 export const murmursApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // 🟢 Get timeline
-  getMurmurs: builder.query<ApiResponse<Murmur[]>, TimelineQuery | void>({
-  query: (params) => ({
-    url: "/murmurs/murmurs",
-    method: "GET",
-    ...(params ? { params } : {}),
-  }),
-  providesTags: ["Murmur"],
-}),
+    //  Get timeline
+    getMurmurs: builder.query<ApiResponse<Murmur[]>, TimelineQuery | void>({
+      query: (params) => ({
+        url: "/murmurs/murmurs",
+        method: "GET",
+        ...(params ? { params } : {}),
+      }),
+      providesTags: ["Murmur"],
+    }),
 
-    // 🟢 Create murmur
+    //  Create murmur
     createMurmur: builder.mutation<ApiResponse<Murmur>, { content: string }>({
       query: (body) => ({
         url: "/murmurs/me/murmurs",
@@ -54,7 +38,7 @@ export const murmursApi = baseApi.injectEndpoints({
       invalidatesTags: ["Murmur"],
     }),
 
-    // 🔴 Delete murmur
+    //  Delete murmur
     deleteMurmur: builder.mutation<ApiResponse<null>, number>({
       query: (id) => ({
         url: `/murmurs/me/murmurs/${id}`,
@@ -63,7 +47,7 @@ export const murmursApi = baseApi.injectEndpoints({
       invalidatesTags: ["Murmur"],
     }),
 
-    // ❤️ Like murmur
+    //  Like murmur
     likeMurmur: builder.mutation<ApiResponse<null>, number>({
       query: (id) => ({
         url: `/murmurs/murmurs/${id}/like`,
@@ -74,7 +58,6 @@ export const murmursApi = baseApi.injectEndpoints({
   }),
 });
 
-/* ---------------- HOOKS ---------------- */
 
 export const {
   useGetMurmursQuery,

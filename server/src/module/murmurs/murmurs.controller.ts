@@ -28,34 +28,24 @@ export class MurmursController {
   constructor(private readonly murmursService: MurmursService) {}
 
   // --- GET TIMELINE ---
+  @UseGuards(JwtAuthGuard)
   @Get('murmurs')
   @ApiOperation({ summary: 'Get murmurs timeline' })
   @ApiResponse({ status: 200, type: ResponseDto, description: 'Timeline retrieved' })
   async getTimeline(
+      @Req() req: GetMe,
     @Res() res: express.Response,
     @Query() query: TimelineQueryDto,
   ) {
-    const data = await this.murmursService.getTimeline(query.page ?? 1, query.limit ?? 10);
+    const userId = Number(req.user.id);
+    const data = await this.murmursService.getTimeline(userId,query.page ?? 1, query.limit ?? 10);
 
-    const formattedData = data.map(m => ({
-      id: m.id,
-      content: m.content,
-      userId: m.userId,
-      createdAt: m.createdAt,
-      updatedAt: m.updatedAt,
-      likesCount: m._count.likes,
-      user: {
-        id: m.user.id,
-        name: m.user.name,
-        profileImage: m.user.profileImage,
-      },
-    }));
 
     return sendResponse(res, {
       statusCode: HttpStatus.OK,
       success: true,
       message: 'Timeline retrieved successfully',
-      data: formattedData,
+      data: data,
     });
   }
 
