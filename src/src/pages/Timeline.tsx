@@ -3,10 +3,16 @@ import MurmurCard from '../components/MurmurCard';
 import CreateMurmur from '../components/CreateMurmur';
 import Navbar from '../components/Navbar';
 import { useGetMeQuery } from '../redux/auth/authApi';
+import { useGetMurmursQuery } from '../redux/murmurs/murmursApi';
 
 export default function Timeline() {
       const { data: me, isLoading, isError } = useGetMeQuery();
+      const { data:murmursData, isLoading:getMurmursLoading, isError:getMurmursIsError } = useGetMurmursQuery({
+    page: 1,
+    limit: 10,
+  });
       console.log("data---->",me)
+      console.log("murmursData---->",murmursData)
     // getMe  useGetMeQuery
     if (isLoading) {
     return (
