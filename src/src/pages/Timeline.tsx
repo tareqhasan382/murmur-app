@@ -2,8 +2,27 @@ import { murmurs } from '../data/mockData';
 import MurmurCard from '../components/MurmurCard';
 import CreateMurmur from '../components/CreateMurmur';
 import Navbar from '../components/Navbar';
+import { useGetMeQuery } from '../redux/auth/authApi';
 
 export default function Timeline() {
+      const { data: me, isLoading, isError } = useGetMeQuery();
+      console.log("data---->",me)
+    // getMe  useGetMeQuery
+    if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
+
+  if (isError || !me) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Unauthorized. Please login.
+      </div>
+    );
+  }
     return (
         <div className="min-h-screen w-full bg-gray-100 flex flex-col items-center">
 
