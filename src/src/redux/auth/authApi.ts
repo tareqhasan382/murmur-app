@@ -2,18 +2,24 @@ import { baseApi } from "../api/baseApi";
 import { userLoggedIn } from "./authSlice";
 import { jwtDecode } from "jwt-decode";
 export interface UserResponse {
-  _id: string;
+  id: string;
   name: string;
   email: string;
   image: string;
   role: string;
 }
 export interface User {
-  _id: string;
-  name: string;
-  email: string;
-  image: string;
-  role: string;
+   data: {
+     id: number;
+     name: string;
+     email: string;
+     phone?: string;
+     profileImage?: string | null;
+     role: string;
+     status: string;
+     createdAt: string;
+     updatedAt: string;
+   };
 }
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -82,6 +88,13 @@ export const authApi = baseApi.injectEndpoints({
       }),
       providesTags: ["auth"],
     }),
+    getUser: builder.query<User, number>({
+      query: (id) => ({
+        url: `user/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["auth"],
+    }),
   }),
 });
 
@@ -90,5 +103,6 @@ export const {
   useSignupMutation,
   useAllUserQuery,
   useUpdateUserMutation,
-  useGetMeQuery
+  useGetMeQuery,
+    useGetUserQuery,
 } = authApi;
