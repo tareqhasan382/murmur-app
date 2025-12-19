@@ -4,6 +4,7 @@ import CreateMurmur from '../components/CreateMurmur';
 import Navbar from '../components/Navbar';
 import { useGetMeQuery } from '../redux/auth/authApi';
 import { useGetMurmursQuery } from '../redux/murmurs/murmursApi';
+import Footer from "./Footer.tsx";
 
 export default function Timeline() {
       const { data: me, isLoading, isError } = useGetMeQuery();
@@ -49,9 +50,9 @@ export default function Timeline() {
             <Navbar />
 
             {/* Centered content */}
-            <main className=" px-4 pt-6 ">
+            <main className=" px-4 pt-6 w-[310px]">
                 <h1 className="text-2xl font-bold mb-4 text-gray-900 text-center sm:text-left">
-                    Home
+                    Murmurs
                 </h1>
 
                 <CreateMurmur />
@@ -62,6 +63,8 @@ export default function Timeline() {
                     ))}
                 </div>
             </main>
+
+            <Footer />
         </div>
     );
 }
