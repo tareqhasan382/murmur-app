@@ -1,5 +1,5 @@
 import {FaTrash, FaRegHeart, FaHeart} from 'react-icons/fa';
-import type {Murmur} from "../types";
+import type {Murmur, ProfileProps} from "../types";
 import {useLikeMurmurMutation,useDeleteMurmurMutation} from "../redux/murmurs/murmursApi.ts";
 import avatar from "../assets/avatar.jpg";
 import {timeAgo} from "../helper/timeCalculate.ts";
@@ -19,8 +19,8 @@ export default function MurmurCard({ murmur,me }: Props) {
             console.error("Failed to like murmur");
         }
     };
-    console.log("me------>",me)
-    console.log("murmur------>",murmur)
+    //console.log("me------>",me)
+    //console.log("murmur------>",murmur)
     const handleDelete = async () => {
         const confirm = window.confirm("Delete this murmur?");
         if (!confirm) return;
@@ -63,10 +63,10 @@ export default function MurmurCard({ murmur,me }: Props) {
                         </div>
                         <button
                             onClick={handleDelete}
-                            disabled={isDeleting || me?.id !== murmur.user.id}
+                            disabled={isDeleting || me?.user?.id !== murmur.user.id}
                             className={`
     transition
-    ${me?.id === murmur.user.id
+    ${me?.user?.id === murmur.user.id
                                 ? "text-gray-400 hover:text-red-500 cursor-pointer"
                                 : "text-gray-300 cursor-not-allowed"}
     ${isDeleting ? "opacity-50" : ""}
