@@ -1,14 +1,18 @@
 export interface User {
     id: number;
     name: string;
-    profileImage: string;
+    profileImage: string | null;
 }
 
 
 export interface Murmur {
     id: number;
     content: string;
-    user: User;
-    likes: number;
+    userId: number;
     createdAt: string;
+    updatedAt: string;
+    likesCount: number;
+    isLiked: boolean;
+    likedUsers: number[]; // list of user IDs who liked
+    user: User;
 }

@@ -1,4 +1,4 @@
-import { murmurs } from '../data/mockData';
+// import { murmurs } from '../data/mockData';
 import MurmurCard from '../components/MurmurCard';
 import CreateMurmur from '../components/CreateMurmur';
 import Navbar from '../components/Navbar';
@@ -11,8 +11,8 @@ export default function Timeline() {
     page: 1,
     limit: 10,
   });
-      console.log("data---->",me)
-      console.log("murmursData---->",murmursData)
+      //console.log("data---->",me)
+      //console.log("murmursData---->",murmursData?.data)
     // getMe  useGetMeQuery
     if (isLoading) {
     return (
@@ -21,6 +21,13 @@ export default function Timeline() {
       </div>
     );
   }
+    if (getMurmursLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                Loading...
+            </div>
+        );
+    }
 
   if (isError || !me) {
     return (
@@ -28,7 +35,13 @@ export default function Timeline() {
         Unauthorized. Please login.
       </div>
     );
-  }
+  }  if (getMurmursIsError) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                Unauthorized. Please login.
+            </div>
+        );
+    }
     return (
         <div className="min-h-screen w-full bg-gray-100 flex flex-col items-center">
 
@@ -44,8 +57,8 @@ export default function Timeline() {
                 <CreateMurmur />
 
                 <div className="space-y-4">
-                    {murmurs.map(m => (
-                        <MurmurCard key={m.id} murmur={m} />
+                    {murmursData?.data.map((murmur) => (
+                        <MurmurCard key={murmur.id} murmur={murmur} />
                     ))}
                 </div>
             </main>
