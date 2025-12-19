@@ -16,3 +16,16 @@ export interface Murmur {
     likedUsers: number[]; // list of user IDs who liked
     user: User;
 }
+export interface ProfileProps {
+    user: {
+        id: number;
+        name: string;
+        email: string;
+        phone?: string;
+        profileImage?: string | null;
+        role: string;
+        status: string;
+        createdAt: string;
+        updatedAt: string;
+    };
+}
