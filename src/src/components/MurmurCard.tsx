@@ -3,6 +3,7 @@ import type {Murmur} from "../types";
 import {useLikeMurmurMutation} from "../redux/murmurs/murmursApi.ts";
 import avatar from "../assets/avatar.jpg";
 import {timeAgo} from "../helper/timeCalculate.ts";
+import {Link} from "react-router-dom";
 interface Props {
     murmur: Murmur;
 }
@@ -42,7 +43,12 @@ export default function MurmurCard({ murmur }: Props) {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="font-semibold text-gray-900">
-                                {murmur.user.name}
+                                <Link
+                                    to={`/profile/${murmur.user.id}`}
+                                    className="hover:underline hover:text-blue-600"
+                                >
+                                    {murmur.user.name}
+                                </Link>
                             </p>
                             <p className="text-xs text-gray-500">{timeAgo(murmur?.createdAt)}</p>
                         </div>

@@ -12,17 +12,7 @@ export default function Timeline() {
     page: 1,
     limit: 10,
   });
-      //console.log("data---->",me)
-      //console.log("murmursData---->",murmursData?.data)
-    // getMe  useGetMeQuery
-    if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading...
-      </div>
-    );
-  }
-    if (getMurmursLoading) {
+    if (getMurmursLoading || isLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 Loading...
@@ -30,7 +20,7 @@ export default function Timeline() {
         );
     }
 
-  if (isError || !me) {
+  if (isError || getMurmursIsError || !me) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         Unauthorized. Please login.
@@ -47,7 +37,7 @@ export default function Timeline() {
         <div className="min-h-screen w-full bg-gray-100 flex flex-col items-center">
 
             {/* Navbar */}
-            <Navbar />
+            <Navbar user={me?.data} />
 
             {/* Centered content */}
             <main className=" px-4 pt-6 w-[310px]">
